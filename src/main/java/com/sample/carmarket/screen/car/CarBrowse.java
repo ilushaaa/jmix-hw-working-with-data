@@ -5,6 +5,7 @@ import io.jmix.core.DataManager;
 import io.jmix.ui.Notifications;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.component.GroupTable;
+import io.jmix.ui.model.CollectionContainer;
 import io.jmix.ui.screen.*;
 import com.sample.carmarket.entity.Car;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,8 @@ public class CarBrowse extends StandardLookup<Car> {
     private Notifications notifications;
     @Autowired
     private DataManager dataManager;
+    @Autowired
+    private CollectionContainer<Car> carsDc;
 
     @Subscribe("carsTable.markAsSold")
     public void onCarsTableMarkAsSold(final Action.ActionPerformedEvent event) {
@@ -41,7 +44,8 @@ public class CarBrowse extends StandardLookup<Car> {
         selected.setStatus(AvailabilityStatus.SOLD);
         selected.setDateOfSale(LocalDate.now());
 
-        dataManager.save(selected);
+        Car savedCar = dataManager.save(selected);
+        carsDc.replaceItem(savedCar);
 
         notifications.create()
                 .withCaption("Done")

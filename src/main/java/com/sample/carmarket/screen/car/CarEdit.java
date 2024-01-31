@@ -7,5 +7,5 @@ import com.sample.carmarket.entity.Car;
 @UiDescriptor("car-edit.xml")
 @EditedEntityContainer("carDc")
 public class CarEdit extends StandardEditor<Car> {
-    
+
 }

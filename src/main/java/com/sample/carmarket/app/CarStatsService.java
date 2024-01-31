@@ -7,6 +7,7 @@ import io.jmix.core.FluentValuesLoader;
 import io.jmix.core.entity.KeyValueEntity;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 @Component
@@ -17,13 +18,14 @@ public class CarStatsService {
         this.dataManager = dataManager;
     }
 
-    public String calculateCarStatusAsString(Manufacturer manufacturer) {
+    public String calculateCarStatusAsString(@Nullable Manufacturer manufacturer) {
         List<KeyValueEntity> list = withParameter(withQuery(dataManager, manufacturer), manufacturer)
                 .properties("engineType", "count")
                 .list();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("Statistics for " + (manufacturer != null ? manufacturer.getName() : "all manufacturers"));
+        sb.append("Statistics for ")
+                .append(manufacturer != null ? manufacturer.getName() : "all manufacturers");
 
         for (KeyValueEntity queryResult : list) {
             Number count = queryResult.getValue("count");
@@ -32,10 +34,10 @@ public class CarStatsService {
             sb.append("\n");
 
             if (EngineType.ELECTRIC.getId().equals(engineType)) {
-                sb.append("Electric cars: " + count);
+                sb.append("Electric cars: ").append(count);
             }
             if (EngineType.GASOLINE.getId().equals(engineType)) {
-                sb.append("Gasoline cars: " + count);
+                sb.append("Gasoline cars: ").append(count);
             }
         }
 
